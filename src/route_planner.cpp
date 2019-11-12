@@ -33,15 +33,13 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     current_node->FindNeighbors();
-    RouteModel::Node *neighbor;
-    for(int i=0; i < current_node->neighbors.size();i++){
-        neighbor->parent = current_node->neighbors[i];
-        neighbor->g_value = current_node->neighbors[i]->g_value++;
+    for(auto neighbor : current_node->neighbors){
+        neighbor->parent = current_node;
+        neighbor->g_value = current_node->g_value + current_node->distance(*neighbor);
         neighbor->h_value = CalculateHValue(neighbor);
-    }
-    for(auto i : current_node->neighbors){
-        open_list.push_back(i);
-        i->visited = true;
+
+        open_list.push_back(neighbor);
+        neighbor->visited = true;
     }
 }
 
@@ -81,13 +79,11 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
 
-    // TODO: Implement your solution here.
+    // TODO: Implement your solution here.\
 
-    auto thisNode = current_node;
-    while(thisNode->parent != start_node){
-        distance += thisNode->parent->distance(*thisNode);
-        path_found.push_back(*thisNode);
-        thisNode = thisNode->parent;
+    while(current_node->parent != start_node){
+        distance = current_node->distance(*current_node->parent);
+        current_node = current_node->parent;
     }
     std::reverse(path_found.begin(), path_found.end());
 
