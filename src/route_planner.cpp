@@ -106,10 +106,10 @@ void RoutePlanner::AStarSearch() {
 
     // TODO: Implement your solution here.
     AddNeighbors(current_node);
-
     while(open_list.size() > 0){
         if(current_node->distance(*end_node) == 0) {
             m_Model.path = ConstructFinalPath(current_node);
+            return;
         }
         else{
             AddNeighbors(current_node);
