@@ -78,6 +78,7 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
+
     path_found.emplace_back(*current_node);
     distance = current_node->distance(*current_node->parent);
 
@@ -101,19 +102,19 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 // - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
 
 void RoutePlanner::AStarSearch() {
-    RouteModel::Node *current_node = nullptr;
+    RouteModel::Node *current_node = start_node;
 
     // TODO: Implement your solution here.
     AddNeighbors(current_node);
 
     while(open_list.size() > 0){
-        auto nextNode = NextNode();
-        if(nextNode == end_node){
+        if(current_node->distance(*end_node) == 0) {
             m_Model.path = ConstructFinalPath(current_node);
-        }else {
-            AddNeighbors(current_node);
         }
-
+        else{
+            AddNeighbors(current_node);
+            current_node = NextNode();
+        }
     }
 
 }
