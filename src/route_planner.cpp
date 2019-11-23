@@ -111,8 +111,8 @@ void RoutePlanner::AStarSearch() {
             return;
         }
         else{
-            AddNeighbors(current_node);
             current_node = NextNode();
+            AddNeighbors(current_node);
         }
     }
 
